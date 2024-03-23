@@ -1,0 +1,95 @@
+version: "3"
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev
+    depends_on:
+      - users
+      - auth
+      - product
+      - chat
+      - rabbitmq
+      - mysql
+  
+  users:
+    container_name: users
+    build:
+      context: .
+      dockerfile: ./apps/users/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev users
+    depends_on:
+      - rabbitmq
+      - mysql
+
+  auth:
+    container_name: auth
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev auth
+    depends_on:
+      - rabbitmq
+      - mysql
+
+  product:
+    container_name: product
+    build:
+      context: .
+      dockerfile: ./apps/product/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev product
+    depends_on:
+      - rabbitmq
+      - mysql
+
+  chat:
+    container_name: chat
+    build:
+      context: .
+      dockerfile: ./apps/chat/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev chat
+    depends_on:
+      - rabbitmq
+      - mysql
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.12-management
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.3
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
