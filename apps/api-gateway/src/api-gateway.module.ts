@@ -3,6 +3,7 @@ import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
