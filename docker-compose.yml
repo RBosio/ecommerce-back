@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   api-gateway:
@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/usr/src/app
     command: npm run start:dev
@@ -18,9 +18,10 @@ services:
       - auth
       - product
       - chat
+      - mail
       - rabbitmq
       - mysql
-  
+
   users:
     container_name: users
     build:
@@ -77,14 +78,28 @@ services:
       - rabbitmq
       - mysql
 
+  mail:
+    container_name: mail
+    build:
+      context: .
+      dockerfile: ./apps/mail/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev mail
+    depends_on:
+      - rabbitmq
+      - mysql
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.12-management
     env_file:
       - .env
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
 
   mysql:
     container_name: mysql
@@ -92,4 +107,4 @@ services:
     env_file:
       - .env
     ports:
-      - "3306:3306"
+      - '3306:3306'
