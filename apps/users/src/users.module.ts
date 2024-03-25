@@ -11,6 +11,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { QueryHandlers } from './application/queries/handlers';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserSchemaFactory } from '@app/common/infrastructure/typeorm/user-schema.factory';
+import { CommandHandlers } from './application/commands/handlers';
 
 @Module({
   imports: [
@@ -23,6 +24,11 @@ import { UserSchemaFactory } from '@app/common/infrastructure/typeorm/user-schem
     TypeOrmModule.forFeature([UserSchema]),
   ],
   controllers: [UsersController],
-  providers: [UserRepository, ...QueryHandlers, UserSchemaFactory],
+  providers: [
+    UserRepository,
+    ...QueryHandlers,
+    ...CommandHandlers,
+    UserSchemaFactory,
+  ],
 })
 export class UsersModule {}
