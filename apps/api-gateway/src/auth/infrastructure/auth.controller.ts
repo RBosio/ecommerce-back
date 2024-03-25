@@ -1,15 +1,9 @@
-import {
-  Body,
-  Controller,
-  Inject,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Inject, Param, Put } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { AUTH_SERVICE } from '../constants';
+import { AUTH_SERVICE } from '../../constants';
 import { CreateUserDto } from '@app/common';
 import { catchError } from 'rxjs';
-import { ErrorHandlerService } from '../error/error-handler.service';
+import { ErrorHandlerService } from '../../error/error-handler.service';
 
 @Controller('auth')
 export class AuthController {
