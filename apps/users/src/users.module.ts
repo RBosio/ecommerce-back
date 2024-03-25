@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
+import { UsersController } from './infrastructure/users.controller';
 import {
   DatabaseModule,
   RmqModule,
