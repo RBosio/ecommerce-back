@@ -5,6 +5,7 @@ export class User extends AggregateRoot {
     private readonly id: string,
     private readonly name: string,
     private readonly email: string,
+    private readonly card_number: string,
     private readonly password: string,
     private readonly deletedAt?: Date,
   ) {
@@ -21,6 +22,10 @@ export class User extends AggregateRoot {
 
   getEmail(): string {
     return this.email;
+  }
+
+  getCardNumber(): string {
+    return this.card_number;
   }
 
   getPassword(): string {
