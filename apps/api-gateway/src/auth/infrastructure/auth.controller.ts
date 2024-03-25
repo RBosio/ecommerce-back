@@ -9,7 +9,7 @@ import { ErrorHandlerService } from '../../error/error-handler.service';
 export class AuthController {
   constructor(
     @Inject(AUTH_SERVICE) private authService: ClientRMQ,
-    private errorHandler: ErrorHandlerService,
+    private errorHandlerService: ErrorHandlerService,
   ) {}
 
   @Put('signup/:userId')
@@ -21,8 +21,7 @@ export class AuthController {
       .send({ cmd: 'createUser' }, { userId, createUserDto })
       .pipe(
         catchError((val) => {
-          console.log(val);
-          this.errorHandler.handle(val);
+          this.errorHandlerService.handle(val);
 
           return val;
         }),
