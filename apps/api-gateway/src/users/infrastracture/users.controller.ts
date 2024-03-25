@@ -1,5 +1,5 @@
-import { User } from '@app/common';
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { UpdateUserDto, User } from '@app/common';
+import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { USER_SERVICE } from '../../constants';
@@ -26,5 +26,21 @@ export class UsersController {
         return val;
       }),
     );
+  }
+
+  @Patch(':userId')
+  updateUser(
+    @Param('userId') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Observable<User> {
+    return this.userService
+      .send({ cmd: 'updateUser' }, { userId, updateUserDto })
+      .pipe(
+        catchError((val) => {
+          this.errorHandlerService.handle(val);
+
+          return val;
+        }),
+      );
   }
 }

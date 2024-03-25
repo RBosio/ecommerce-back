@@ -1,6 +1,6 @@
-import { RmqService, User } from '@app/common';
+import { RmqService, UpdateUserDto, User } from '@app/common';
 import { Controller } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   Ctx,
   MessagePattern,
@@ -9,12 +9,14 @@ import {
 } from '@nestjs/microservices';
 import { FindUsersQuery } from '../application/queries/impl/find-users.query';
 import { FindUserQuery } from '../application/queries/impl/find-user.query';
+import { UpdateUserCommand } from '../application/commands/impl/update-user.command';
 
 @Controller()
 export class UsersController {
   constructor(
     private rmqService: RmqService,
     private queryBus: QueryBus,
+    private commandBus: CommandBus,
   ) {}
 
   @MessagePattern({ cmd: 'findUsers' })
@@ -32,5 +34,19 @@ export class UsersController {
     this.rmqService.acknowledgmentMessage(context);
 
     return this.queryBus.execute(new FindUserQuery(userId));
+  }
+
+  @MessagePattern({ cmd: 'updateUser' })
+  updateUser(
+    @Ctx() context: RmqContext,
+    @Payload() data: { userId: string; updateUserDto: UpdateUserDto },
+  ) {
+    this.rmqService.acknowledgmentMessage(context);
+
+    this.commandBus.execute(
+      new UpdateUserCommand(data.userId, data.updateUserDto),
+    );
+
+    return true;
   }
 }
