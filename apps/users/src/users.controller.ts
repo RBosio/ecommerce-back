@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { User } from '@app/common';
+import { Controller } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import { MessagePattern } from '@nestjs/microservices';
+import { FindUsersQuery } from './application/queries/impl/find-users.query';
 
 @Controller()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private queryBus: QueryBus) {}
 
-  @Get()
-  getHello(): string {
-    return this.usersService.getHello();
+  @MessagePattern({ cmd: 'findUsers' })
+  findUsers(): Promise<User[]> {
+    return this.queryBus.execute(new FindUsersQuery());
   }
 }
